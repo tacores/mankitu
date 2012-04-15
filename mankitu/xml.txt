@@ -1,0 +1,13 @@
+<bookmarks>
+	<bookmark>
+		<uid>188282882</uid>
+  		<title>•Žm‘òƒŒƒV[ƒu</title>
+  		<status>C</status>
+		<volume>3</volume>
+		<page></page>
+		<story></story>
+		<memo></memo>
+		<date>20091003</data>
+	</bookmark>
+</bookmarks>
+
