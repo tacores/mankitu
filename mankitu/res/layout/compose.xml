@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<LinearLayout 
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<RelativeLayout
+	android:layout_width="fill_parent"
+	android:id="@+id/relativeLayout2"
+	android:layout_height="wrap_content"
+>
+    <Button
+    	android:text="@string/save"
+    	android:id="@+id/buttonSave"
+    	android:layout_width="50pt"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentLeft="true"
+    ></Button>
+    <Button
+    	android:text="@string/delete"
+    	android:id="@+id/buttonDelete"
+    	android:layout_width="50pt"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentRight="true"
+    ></Button>
+</RelativeLayout>
+<TextView
+	android:text="@string/title"
+	android:id="@+id/textView2"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+></TextView>
+<EditText
+	android:layout_width="fill_parent"
+	android:text=""
+	android:layout_height="wrap_content"
+	android:id="@+id/editTextTitle"
+	android:autoText="false"
+></EditText>
+<TextView
+	android:text="@string/status"
+	android:id="@+id/textView3"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+></TextView>
+<Spinner
+	android:layout_height="wrap_content"
+	android:id="@+id/spinner1"
+	android:layout_width="fill_parent"
+></Spinner>
+<TextView
+	android:text="@string/bookmark"
+	android:id="@+id/textView7"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+></TextView>
+<RelativeLayout
+	android:layout_width="fill_parent"
+	android:id="@+id/relativeLayout1"
+	android:layout_height="wrap_content"
+>
+	<EditText
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:id="@+id/editTextVolume"
+		android:text=""
+		android:width="40pt"
+		android:inputType="number"
+	></EditText>
+	<TextView
+		android:text="@string/volume"
+		android:id="@+id/textView5" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_alignBottom="@+id/editTextVolume"
+		android:layout_toRightOf="@+id/editTextVolume"
+	></TextView>
+	<EditText
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:id="@+id/editTextPage"
+		android:text=""
+		android:width="40pt" 
+		android:layout_toRightOf="@+id/textView5"
+		android:inputType="number"
+	></EditText>
+	<TextView
+		android:text="@string/page"
+		android:id="@+id/textView6" 
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_alignBottom="@+id/editTextPage"
+		android:layout_toRightOf="@+id/editTextPage"
+	></TextView>
+</RelativeLayout>
+<TextView android:text="@string/story" android:id="@+id/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<EditText android:layout_width="fill_parent" android:text="" android:layout_height="wrap_content" android:id="@+id/editTextStory"></EditText>
+<TextView android:text="@string/note" android:id="@+id/textView4" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+<EditText android:layout_width="fill_parent" android:text="" android:layout_height="wrap_content" android:id="@+id/editTextMemo"></EditText>
+</LinearLayout>
+</ScrollView>
