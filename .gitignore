@@ -17,4 +17,5 @@ local.properties
 
 #other
 Thumbs.db
-.metadata/
+.metadata
+ComicCafeBookMark
