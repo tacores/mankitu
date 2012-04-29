@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.LinkedList;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -64,9 +64,9 @@ public class BookmarkFile {
 	 * @param out_progressList	読みかけリスト
 	 * @param out_completeList	完結リスト
 	 */
-	public void readFile( LinkedList<Bookmark> out_unReadList,
-			LinkedList<Bookmark> out_progressList,
-			LinkedList<Bookmark> out_completeList ) {
+	public void readFile( List<Bookmark> out_unReadList,
+			List<Bookmark> out_progressList,
+			List<Bookmark> out_completeList ) {
 		FileInputStream is;
         try{
             is = context.openFileInput(dataFilePath);
@@ -122,9 +122,9 @@ public class BookmarkFile {
     	}
 	}
 	private void processEndTag(XmlPullParser xmlPullParser,
-			LinkedList<Bookmark> out_unReadList,
-			LinkedList<Bookmark> out_progressList,
-			LinkedList<Bookmark> out_completeList ) {
+			List<Bookmark> out_unReadList,
+			List<Bookmark> out_progressList,
+			List<Bookmark> out_completeList ) {
     	String endTag = xmlPullParser.getName();
     	Log.d("CCBM", "processEnd:" + endTag);
     	if(endTag.equalsIgnoreCase("bookmark")) {
@@ -170,7 +170,7 @@ public class BookmarkFile {
     		//ASSERT
     	}
 	}
-	private void outputListXml( LinkedList<Bookmark> list, XmlSerializer serializer ) {
+	private void outputListXml( List<Bookmark> list, XmlSerializer serializer ) {
 		for(Bookmark bm: list) {
 			try {
 			serializer.startTag("", "bookmark");
@@ -248,9 +248,9 @@ public class BookmarkFile {
 	 * @param progressList	読みかけリスト
 	 * @param completeList	完結リスト
 	 */
-	public void flush( LinkedList<Bookmark> unReadList,
-			LinkedList<Bookmark> progressList,
-			LinkedList<Bookmark> completeList ) {
+	public void flush( List<Bookmark> unReadList,
+			List<Bookmark> progressList,
+			List<Bookmark> completeList ) {
         XmlSerializer serializer = Xml.newSerializer();
         try {
             //FileOutputStream os = new FileOutputStream( fPath );
@@ -356,9 +356,9 @@ public class BookmarkFile {
 	 * @return	処理結果
 	 * @throws Exception
 	 */
-	public boolean restoreFileFromSDcard( LinkedList<Bookmark> out_unReadList,
-			LinkedList<Bookmark> out_progressList,
-			LinkedList<Bookmark> out_completeList ) throws Exception {
+	public boolean restoreFileFromSDcard( List<Bookmark> out_unReadList,
+			List<Bookmark> out_progressList,
+			List<Bookmark> out_completeList ) throws Exception {
 		Log.d("CCBM", "restoreFileFromSDcard");
         String filePath = Environment.getExternalStorageDirectory() + sdCardPath;
         File file = new File(filePath);

@@ -3,7 +3,7 @@ package jp.tacores.mankitu;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
+import java.util.List;
 
 import android.app.AlertDialog;
 //import android.content.DialogInterface;
@@ -92,7 +92,7 @@ public class BookmarkDisplayActivity extends MyActivity {
 			return true;
 		case MENU_DELETE_ALL:
 		{
-			LinkedList<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
+			List<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
 			int size = linkedList.size();
 			if(size == 0) {	//「表示するデータがありません」が表示されている場合
 				return true;
@@ -311,8 +311,8 @@ public class BookmarkDisplayActivity extends MyActivity {
     	return resultView;
     }
     
-    private LinkedList<Bookmark> getLinkedListByStatus(ViewStatus status) {
-    	LinkedList<Bookmark> returnList;
+    private List<Bookmark> getLinkedListByStatus(ViewStatus status) {
+    	List<Bookmark> returnList;
     	switch(status) {
     	case UNREAD:
     		returnList = unReadList;
@@ -332,7 +332,7 @@ public class BookmarkDisplayActivity extends MyActivity {
     
     private void refleshView(ViewStatus status) {
     	ListView updateView = getListViewByStatus(status);
-    	LinkedList<Bookmark> linkedList = getLinkedListByStatus(status);
+    	List<Bookmark> linkedList = getLinkedListByStatus(status);
     	
         boolean bInsertRow = false;
         int size = linkedList.size();
@@ -367,7 +367,7 @@ public class BookmarkDisplayActivity extends MyActivity {
     }
    
     private void processListItemSelected(int position) {
-    	LinkedList<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
+    	List<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
     	int size = linkedList.size();
     	if(size == 0) {	//「表示するデータがありません」が表示されている場合
     		return;

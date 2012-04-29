@@ -1,6 +1,6 @@
 package jp.tacores.mankitu;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,9 +13,9 @@ import android.util.Log;
  */
 public class MyActivity extends Activity {
     public static final String CCBM_PREFERENCES;
-    protected static LinkedList<Bookmark> unReadList;
-	protected static LinkedList<Bookmark> progressList;
-	protected static LinkedList<Bookmark> completeList;
+    protected static List<Bookmark> unReadList;
+	protected static List<Bookmark> progressList;
+	protected static List<Bookmark> completeList;
     protected static BookmarkManager manager;
     
     static {

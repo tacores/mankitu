@@ -14,9 +14,9 @@ import android.util.Log;
  *
  */
 public final class BookmarkManager {
-	private LinkedList<Bookmark> unReadList;
-	private LinkedList<Bookmark> progressList;
-	private LinkedList<Bookmark> completeList;
+	private List<Bookmark> unReadList;
+	private List<Bookmark> progressList;
+	private List<Bookmark> completeList;
 	
 	private BookmarkFile bf;
 	
@@ -58,25 +58,25 @@ public final class BookmarkManager {
 	 * 未読リストを返します。
 	 * @return	未読リスト
 	 */
-	public LinkedList<Bookmark> getUnreadList() {
+	public List<Bookmark> getUnreadList() {
 		return unReadList;
 	}
 	/**
 	 * 読みかけリストを返します。
 	 * @return	読みかけリスト
 	 */
-	public LinkedList<Bookmark> getProgressList() {
+	public List<Bookmark> getProgressList() {
 		return progressList;
 	}
 	/**
 	 * 完結リストを返します。
 	 * @return	完結リスト
 	 */
-	public LinkedList<Bookmark> getCmpleteList() {
+	public List<Bookmark> getCmpleteList() {
 		return completeList;
 	}
 	
-	private int getIndexOfList(LinkedList<Bookmark> list, Bookmark in_bm) {
+	private int getIndexOfList(List<Bookmark> list, Bookmark in_bm) {
 		int i = 0;
 		for(Bookmark bm: list) {
 			String uid = bm.getUid();
@@ -124,7 +124,7 @@ public final class BookmarkManager {
 	 */
 	public void insertBookmark(Bookmark bm) {
 		ReadStatus eStatus = bm.getReadStatus();
-		LinkedList<Bookmark> insertList;
+		List<Bookmark> insertList;
 		switch(eStatus) {
 		case UNREAD:
 			insertList = unReadList;
@@ -140,7 +140,7 @@ public final class BookmarkManager {
 			//ASSERT
 			return;
 		}
-		insertList.addFirst(bm);
+		insertList.add(0, bm);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public final class BookmarkManager {
 	 * @param status	状態
 	 */
 	public void removeAllOfStatus(ReadStatus status) {
-		LinkedList<Bookmark> removeList;
+		List<Bookmark> removeList;
 		switch(status) {
 		case UNREAD:
 			removeList = unReadList;
