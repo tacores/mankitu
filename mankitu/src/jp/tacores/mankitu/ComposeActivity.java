@@ -174,10 +174,10 @@ public class ComposeActivity extends MyActivity {
     	}
    
     	if(bm != null) {	//編集
-    		bm.update(title, status, volume, page, story, memo);
+    		bm.update(title, status, volume, page, story, memo, new TimeProvider());
     		manager.updateBookmark(bm);
     	} else {	//新規
-    		Bookmark bm_new = new Bookmark( title, status, volume, page, story, memo );
+    		Bookmark bm_new = new Bookmark( title, status, volume, page, story, memo, new TimeProvider() );
     		manager.insertBookmark(bm_new);
     	}
     	manager.flush();	//ファイル保存

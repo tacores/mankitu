@@ -4,7 +4,6 @@
 package jp.tacores.mankitu;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 /**
  * しおりをカプセル化したクラスです。
@@ -21,7 +20,7 @@ public class Bookmark implements Serializable {
 	private String memo;			//メモ
 	private String updateDate;		//更新日(YYYYMMDD)
 	private String uid;				//UID
-	
+
 	/**
 	 * コンストラクタ
 	 * @param in_title	タイトル
@@ -33,9 +32,10 @@ public class Bookmark implements Serializable {
 	 * @param in_updateDate		最終更新日
 	 * @param in_uid	UID
 	 */
-	public Bookmark( String in_title, ReadStatus in_readStatus, String in_volume,
+	public Bookmark( String in_title, String in_readStatus, String in_volume,
 			String in_page, String in_story, String in_memo, String in_updateDate, String in_uid ) {
 		if(in_title == null) throw new IllegalArgumentException("title");
+		if(in_readStatus == null) throw new IllegalArgumentException("readStatus");
 		if(in_volume == null) throw new IllegalArgumentException("volume");
 		if(in_page == null) throw new IllegalArgumentException("page");
 		if(in_story == null) throw new IllegalArgumentException("story");
@@ -44,7 +44,7 @@ public class Bookmark implements Serializable {
 		if(in_uid == null) throw new IllegalArgumentException("uid");
 
 		title = in_title;
-		readStatus = in_readStatus;
+		readStatus = convertReadStatusToEnum(in_readStatus);
 		volume = in_volume;
 		page = in_page;
 		story = in_story;
@@ -61,28 +61,11 @@ public class Bookmark implements Serializable {
 	 * @param in_page	ページ数
 	 * @param in_story	あらすじ
 	 * @param in_memo	メモ
-	 * @param in_updateDate		最終更新日
-	 * @param in_uid	UID
 	 */
 	public Bookmark( String in_title, String in_readStatus, String in_volume,
-			String in_page, String in_story, String in_memo, String in_updateDate, String in_uid ) {
-		this( in_title, convertReadStatusToEnum(in_readStatus), in_volume,
-				in_page, in_story, in_memo, in_updateDate, in_uid );
-	}
-	/**
-	 * コンストラクタ
-	 * @param in_title	タイトル
-	 * @param in_readStatus		状態
-	 * @param in_volume		巻数
-	 * @param in_page	ページ数
-	 * @param in_story	あらすじ
-	 * @param in_memo	メモ
-	 */
-	public Bookmark( String in_title, String in_readStatus, String in_volume,
-			String in_page, String in_story, String in_memo ) {
+			String in_page, String in_story, String in_memo, ITimeProvider time) {
 		this( in_title, in_readStatus, in_volume,
-				in_page, in_story, in_memo, getTodaysString(),
-				getTodaysString() + System.currentTimeMillis() );
+				in_page, in_story, in_memo, getTodaysString(time), generateUid(time) );
 	}
 
 	/**
@@ -95,103 +78,74 @@ public class Bookmark implements Serializable {
 	 * @param in_memo	メモ
 	 */
 	public void update( String in_title, String in_readStatus, String in_volume,
-			String in_page, String in_story, String in_memo ) {
+			String in_page, String in_story, String in_memo, ITimeProvider time) {
+		if(in_title == null) throw new IllegalArgumentException("title");
+		if(in_readStatus == null) throw new IllegalArgumentException("readStatus");
+		if(in_volume == null) throw new IllegalArgumentException("volume");
+		if(in_page == null) throw new IllegalArgumentException("page");
+		if(in_story == null) throw new IllegalArgumentException("story");
+		if(in_memo == null) throw new IllegalArgumentException("memo");
+		if(time == null) throw new IllegalArgumentException("timeProvider");
+		
 		title = in_title;
 		readStatus = convertReadStatusToEnum(in_readStatus);
 		volume = in_volume;
 		page = in_page;
 		story = in_story;
 		memo = in_memo;
-		updateDate = getTodaysString();
+		updateDate = getTodaysString(time);
 		trim();
 	}
-
-	static private String getTodaysString() {
-		int today;	//YYYYMMDD
-		Calendar now = Calendar.getInstance();
-		today = now.get(Calendar.YEAR) * 10000
-				+ (now.get(Calendar.MONTH) + 1) * 100 + now.get(Calendar.DAY_OF_MONTH);
-		String todaysString = String.valueOf(today);
-		return todaysString;
+	
+	static private String generateUid(ITimeProvider time) {
+		return getTodaysString(time) + getCurrentTimeMillis(time);
 	}
 	
-	/**
-	 * タイトルを返します。
-	 * @return	タイトル
-	 */
+	static private String getCurrentTimeMillis(ITimeProvider time) {
+		return Long.toString(time.getCurrentMillis());
+	}
+	
+	static private String getTodaysString(ITimeProvider time) {
+		int today = time.getYear()*10000 + time.getMonth()*100 + time.getDay();
+		return String.valueOf(today);
+	}
+	
 	public String getTitle() {
 		return title;
 	}
 
-	/**
-	 * しおりの状態を返します。
-	 * @return	しおりの状態（ReadStatus型）
-	 */
 	public ReadStatus getReadStatus() {
 		return readStatus;
 	}
-	/**
-	 * しおりの状態を返します。
-	 * @return	しおりの状態（String型）
-	 */
+
 	public String getReadStatusString() {
-		String strStatus = convertReadStatusToString(readStatus);
-		return strStatus;
+		return convertReadStatusToString(readStatus);
 	}
 
-	/**
-	 * 巻数を返します。
-	 * @return	巻数
-	 */
 	public String getVolume() {
 		return volume;
 	}
 
-	/**
-	 * ページ数を返します。
-	 * @return	ページ数
-	 */
 	public String getPage() {
 		return page;
 	}
 
-	/**
-	 * あらすじを返します。
-	 * @return	あらすじ
-	 */
 	public String getStory() {
 		return story;
 	}
 
-	/**
-	 * メモを返します。
-	 * @return	メモ
-	 */
 	public String getMemo() {
 		return memo;
 	}
 
-	/**
-	 * 最終更新日を返します。
-	 * @return	最終更新日
-	 */
 	public String getUpdateDate() {
 		return String.valueOf(updateDate);
 	}
-	
-	/**
-	 * UIDを返します。
-	 * @return	UID
-	 */
+
 	public String getUid() {
 		return uid;
 	}
 
-	/**
-	 * Enumの状態をStringの状態に変換します。
-	 * @param stringStatus	Enum型の状態
-	 * @return	String型の状態
-	 */
 	static public ReadStatus convertReadStatusToEnum(String stringStatus) {
 		ReadStatus enumStatus;
 		if (stringStatus.equals("新刊待ち")) {
@@ -203,12 +157,12 @@ public class Bookmark implements Serializable {
 		} else if (stringStatus.equals("未読")) {
 			enumStatus = ReadStatus.UNREAD;
 		} else {
-			//ASSERT
-			enumStatus = ReadStatus.UNREAD;
+			throw new IllegalArgumentException("Illegal ReadState." + stringStatus);
 		}
 		return enumStatus;
 	}
-	static private String convertReadStatusToString(ReadStatus enumStatus) {
+	
+	static public String convertReadStatusToString(ReadStatus enumStatus) {
 		String stringStatus;
 		switch(enumStatus)
 		{
@@ -225,12 +179,11 @@ public class Bookmark implements Serializable {
 			stringStatus = "完結";
 			break;
 		default:
-			//ASSERT
-			stringStatus = "未読";
-			break;		
+			throw new IllegalArgumentException("Illegal EnumStatus");
 		}
 		return stringStatus;
 	}
+	
 	private void trim() {
 		if(title != null){
 			title = title.trim();
@@ -248,5 +201,6 @@ public class Bookmark implements Serializable {
 			memo = memo.trim();
 		}
 	}
+
 }
 
