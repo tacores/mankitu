@@ -1,4 +1,4 @@
-package jp.tacores.mankitu;
+package jp.tacores.mankitu.bookmark;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.List;
+
+import jp.tacores.mankitu.util.IContextContainer;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -43,7 +45,7 @@ class BookmarkData {
  * @author Tacores
  *
  */
-public class BookmarkFile {
+public class BookmarkFile implements IBookmarkSource {
 	
 	private static final String dataFilePath = "bookmarks.xml";
 	private static final String sdCardPath = "/siori_export.xml";
@@ -51,13 +53,6 @@ public class BookmarkFile {
 	private String tagName;
 	private Context context;
 
-	/**
-	 * 初期化処理をします。
-	 * @param in_context	コンテキスト
-	 */
-	public void init(Context in_context) {
-		context = in_context;
-	}
 	/**
 	 * ファイルを読み込んで、データを各リストにセットします。
 	 * @param out_unReadList	未読リスト
@@ -414,5 +409,32 @@ public class BookmarkFile {
         }
         flush(out_unReadList, out_progressList, out_completeList);
 		return true;
+	}
+
+
+	public void retrieve(IContextContainer context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<Bookmark> getUnReadList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Bookmark> getProgressList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Bookmark> getCompleteList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void flush(IContextContainer container, List<Bookmark> unReadList,
+			List<Bookmark> progressList, List<Bookmark> completeList) {
+		// TODO Auto-generated method stub
+		
 	}
 }

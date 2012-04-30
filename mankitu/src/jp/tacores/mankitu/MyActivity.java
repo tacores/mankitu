@@ -13,17 +13,17 @@ import android.util.Log;
  */
 public class MyActivity extends Activity {
     public static final String CCBM_PREFERENCES;
-    protected static List<Bookmark> unReadList;
-	protected static List<Bookmark> progressList;
-	protected static List<Bookmark> completeList;
-    protected static BookmarkManager manager;
+    //protected static List<Bookmark> unReadList;
+	//protected static List<Bookmark> progressList;
+	//protected static List<Bookmark> completeList;
+    //protected BookmarkManager manager;
     
     static {
         CCBM_PREFERENCES = "CcbmPreferences";
-        manager = BookmarkManager.getInstance();
-        unReadList = manager.getUnreadList();
-    	progressList = manager.getProgressList();
-    	completeList = manager.getCmpleteList();
+        //manager = BookmarkManager.getInstance();
+        //unReadList = manager.getUnreadList();
+    	//progressList = manager.getProgressList();
+    	//completeList = manager.getCmpleteList();
     }
 
     protected static void logDebug(String message) {

@@ -1,9 +1,9 @@
 package jp.tacores.mankitu.test;
 
-import jp.tacores.mankitu.Bookmark;
-import jp.tacores.mankitu.ITimeProvider;
-import jp.tacores.mankitu.ReadStatus;
-import jp.tacores.mankitu.TimeProvider;
+import jp.tacores.mankitu.bookmark.Bookmark;
+import jp.tacores.mankitu.bookmark.ReadStatus;
+import jp.tacores.mankitu.util.ITimeProvider;
+import jp.tacores.mankitu.util.TimeProvider;
 import junit.framework.TestCase;
 
 public class BookmarkTest extends TestCase {

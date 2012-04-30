@@ -1,4 +1,4 @@
-package jp.tacores.mankitu;
+package jp.tacores.mankitu.util;
 
 public interface ITimeProvider {
 	int getYear();

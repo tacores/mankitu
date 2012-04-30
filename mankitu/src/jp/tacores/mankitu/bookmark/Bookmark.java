@@ -1,9 +1,11 @@
 /**
  * 
  */
-package jp.tacores.mankitu;
+package jp.tacores.mankitu.bookmark;
 
 import java.io.Serializable;
+
+import jp.tacores.mankitu.util.ITimeProvider;
 
 /**
  * しおりをカプセル化したクラスです。

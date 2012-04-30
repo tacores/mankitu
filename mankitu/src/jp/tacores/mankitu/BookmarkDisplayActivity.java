@@ -5,6 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+import jp.tacores.mankitu.bookmark.BackupAccess;
+import jp.tacores.mankitu.bookmark.Bookmark;
+import jp.tacores.mankitu.bookmark.BookmarkFile;
+import jp.tacores.mankitu.bookmark.BookmarkManager;
+import jp.tacores.mankitu.bookmark.ReadStatus;
+import jp.tacores.mankitu.util.ContextContainer;
+
 import android.app.AlertDialog;
 //import android.content.DialogInterface;
 import android.content.DialogInterface;
@@ -37,6 +44,7 @@ enum ViewStatus { UNREAD, PROGRESS, COMPLETE };
 public class BookmarkDisplayActivity extends MyActivity {
 	private static final int SHOW_EDIT_FORM = 0;  
 	ViewStatus viewStatus = ViewStatus.PROGRESS;
+	private BookmarkManager manager;
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -57,11 +65,9 @@ public class BookmarkDisplayActivity extends MyActivity {
         logDebug("enter setContentView comicList");
         setContentView(R.layout.comiclist);
         
-        unReadList.clear();
-        progressList.clear();
-        completeList.clear();
-
-        manager.init(this);
+        manager = BookmarkManager.getInstance(new ContextContainer(this),
+        		new BookmarkFile(), new BackupAccess());
+        //manager.init(this);
         initializeTab();	//タブの初期化
         
         initializeMenuList();
@@ -315,16 +321,16 @@ public class BookmarkDisplayActivity extends MyActivity {
     	List<Bookmark> returnList;
     	switch(status) {
     	case UNREAD:
-    		returnList = unReadList;
+    		returnList = manager.getUnreadList();
     		break;
     	case PROGRESS:
-    		returnList = progressList;
+    		returnList = manager.getProgressList();
     		break;
     	case COMPLETE:
-    		returnList = completeList;
+    		returnList = manager.getCmpleteList();
     		break;
     	default:
-    		//ASSERT
+    		//TODO
     		returnList = null;
     	}
     	return returnList;
@@ -413,14 +419,15 @@ public class BookmarkDisplayActivity extends MyActivity {
     		//ASSERT
     		break;
     	}
-    	manager.flush();
+    	manager.flush(new ContextContainer(this));
     	refleshAllView();
     }
     
     private void importBookmarks() {
 		boolean ret;
-		try {
-			ret = manager.importBookmarks();
+		//try {
+		manager.importBookmarks(new ContextContainer(this));
+		/*
 		} catch(Exception e) {
 			Log.d( "CCBM", e.toString());
 			final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -441,9 +448,12 @@ public class BookmarkDisplayActivity extends MyActivity {
 		} else {
 			refleshAllView();
 		}
+		*/
     }
     
     private void exportBookmarks() {
+    	manager.exportBookmarks(new ContextContainer(this));
+    	/*
 		boolean ret;
 		ret = manager.exportBookmarks();
 		if(ret == false) {
@@ -451,6 +461,7 @@ public class BookmarkDisplayActivity extends MyActivity {
 		} else {
 			showMessage( "SDカードへの保存に成功しました。", "エクスポート" );
 		}
+		*/
     }
     @SuppressWarnings("unused")
 	private boolean existExportFile() {	
