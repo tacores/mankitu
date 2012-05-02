@@ -19,13 +19,16 @@ public final class BookmarkManager {
 	private List<Bookmark> progressList;
 	private List<Bookmark> completeList;
 	
-	//private BookmarkFile bf;
 	private IBookmarkSource source;
 	private IBackupAccess backup;
-	
 	static private BookmarkManager instance;
+
 	static public BookmarkManager getInstance(IContextContainer context,
 			IBookmarkSource source, IBackupAccess backup) {
+		if(context == null) throw new IllegalArgumentException("context");
+		if(source == null) throw new IllegalArgumentException("source");
+		if(backup == null) throw new IllegalArgumentException("backup");
+
 		if(instance == null) {
 			instance = new BookmarkManager(context, source, backup);
 		}
@@ -40,6 +43,9 @@ public final class BookmarkManager {
 		unReadList = source.getUnReadList();
 		progressList = source.getProgressList();
 		completeList = source.getCompleteList();
+	}
+	static public void deleteInstance() {
+		instance = null;
 	}
 	
 	/**
