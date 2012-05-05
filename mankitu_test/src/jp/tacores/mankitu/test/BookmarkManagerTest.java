@@ -1,14 +1,10 @@
 package jp.tacores.mankitu.test;
 
 import jp.tacores.mankitu.bookmark.BookmarkManager;
-import jp.tacores.mankitu.bookmark.IBookmarkSource;
 import jp.tacores.mankitu.test.util.BackupStub;
 import jp.tacores.mankitu.test.util.NullContextContainer;
 import jp.tacores.mankitu.test.util.SourceStub;
-import jp.tacores.mankitu.util.IContextContainer;
 import junit.framework.TestCase;
-import com.google.android.testing.mocking.AndroidMock;
-import com.google.android.testing.mocking.UsesMocks;
 
 public class BookmarkManagerTest extends TestCase {
 
