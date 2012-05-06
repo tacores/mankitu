@@ -3,7 +3,14 @@ package jp.tacores.mankitu;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
+import java.util.List;
+
+import jp.tacores.mankitu.bookmark.BackupAccess;
+import jp.tacores.mankitu.bookmark.Bookmark;
+import jp.tacores.mankitu.bookmark.BookmarkFile;
+import jp.tacores.mankitu.bookmark.BookmarkManager;
+import jp.tacores.mankitu.bookmark.ReadStatus;
+import jp.tacores.mankitu.util.ContextContainer;
 
 import android.app.AlertDialog;
 //import android.content.DialogInterface;
@@ -37,6 +44,7 @@ enum ViewStatus { UNREAD, PROGRESS, COMPLETE };
 public class BookmarkDisplayActivity extends MyActivity {
 	private static final int SHOW_EDIT_FORM = 0;  
 	ViewStatus viewStatus = ViewStatus.PROGRESS;
+	private BookmarkManager manager;
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -57,11 +65,9 @@ public class BookmarkDisplayActivity extends MyActivity {
         logDebug("enter setContentView comicList");
         setContentView(R.layout.comiclist);
         
-        unReadList.clear();
-        progressList.clear();
-        completeList.clear();
-
-        manager.init(this);
+        manager = BookmarkManager.getInstance(new ContextContainer(this),
+        		new BookmarkFile(), new BackupAccess());
+        //manager.init(this);
         initializeTab();	//タブの初期化
         
         initializeMenuList();
@@ -92,7 +98,7 @@ public class BookmarkDisplayActivity extends MyActivity {
 			return true;
 		case MENU_DELETE_ALL:
 		{
-			LinkedList<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
+			List<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
 			int size = linkedList.size();
 			if(size == 0) {	//「表示するデータがありません」が表示されている場合
 				return true;
@@ -311,20 +317,20 @@ public class BookmarkDisplayActivity extends MyActivity {
     	return resultView;
     }
     
-    private LinkedList<Bookmark> getLinkedListByStatus(ViewStatus status) {
-    	LinkedList<Bookmark> returnList;
+    private List<Bookmark> getLinkedListByStatus(ViewStatus status) {
+    	List<Bookmark> returnList;
     	switch(status) {
     	case UNREAD:
-    		returnList = unReadList;
+    		returnList = manager.getUnreadList();
     		break;
     	case PROGRESS:
-    		returnList = progressList;
+    		returnList = manager.getProgressList();
     		break;
     	case COMPLETE:
-    		returnList = completeList;
+    		returnList = manager.getCmpleteList();
     		break;
     	default:
-    		//ASSERT
+    		//TODO
     		returnList = null;
     	}
     	return returnList;
@@ -332,7 +338,7 @@ public class BookmarkDisplayActivity extends MyActivity {
     
     private void refleshView(ViewStatus status) {
     	ListView updateView = getListViewByStatus(status);
-    	LinkedList<Bookmark> linkedList = getLinkedListByStatus(status);
+    	List<Bookmark> linkedList = getLinkedListByStatus(status);
     	
         boolean bInsertRow = false;
         int size = linkedList.size();
@@ -367,7 +373,7 @@ public class BookmarkDisplayActivity extends MyActivity {
     }
    
     private void processListItemSelected(int position) {
-    	LinkedList<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
+    	List<Bookmark> linkedList = getLinkedListByStatus(viewStatus);
     	int size = linkedList.size();
     	if(size == 0) {	//「表示するデータがありません」が表示されている場合
     		return;
@@ -413,14 +419,15 @@ public class BookmarkDisplayActivity extends MyActivity {
     		//ASSERT
     		break;
     	}
-    	manager.flush();
+    	manager.flush(new ContextContainer(this));
     	refleshAllView();
     }
     
     private void importBookmarks() {
 		boolean ret;
-		try {
-			ret = manager.importBookmarks();
+		//try {
+		manager.importBookmarks(new ContextContainer(this));
+		/*
 		} catch(Exception e) {
 			Log.d( "CCBM", e.toString());
 			final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -441,9 +448,12 @@ public class BookmarkDisplayActivity extends MyActivity {
 		} else {
 			refleshAllView();
 		}
+		*/
     }
     
     private void exportBookmarks() {
+    	manager.exportBookmarks(new ContextContainer(this));
+    	/*
 		boolean ret;
 		ret = manager.exportBookmarks();
 		if(ret == false) {
@@ -451,6 +461,7 @@ public class BookmarkDisplayActivity extends MyActivity {
 		} else {
 			showMessage( "SDカードへの保存に成功しました。", "エクスポート" );
 		}
+		*/
     }
     @SuppressWarnings("unused")
 	private boolean existExportFile() {	

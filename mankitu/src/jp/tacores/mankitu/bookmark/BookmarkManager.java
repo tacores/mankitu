@@ -1,11 +1,12 @@
 /**
  * 
  */
-package jp.tacores.mankitu;
+package jp.tacores.mankitu.bookmark;
 
 import java.util.*;
 
-import android.content.Context;
+import jp.tacores.mankitu.util.IContextContainer;
+
 import android.util.Log;
 
 /**
@@ -14,69 +15,68 @@ import android.util.Log;
  *
  */
 public final class BookmarkManager {
-	private LinkedList<Bookmark> unReadList;
-	private LinkedList<Bookmark> progressList;
-	private LinkedList<Bookmark> completeList;
+	private List<Bookmark> unReadList;
+	private List<Bookmark> progressList;
+	private List<Bookmark> completeList;
 	
-	private BookmarkFile bf;
-	
+	private IBookmarkSource source;
+	private IBackupAccess backup;
 	static private BookmarkManager instance;
-	/**
-	 * シングルトンインスタンスのリファレンスを取得します。
-	 * @return	リファレンス
-	 */
-	static public BookmarkManager getInstance() {
+
+	static public BookmarkManager getInstance(IContextContainer context,
+			IBookmarkSource source, IBackupAccess backup) {
+		if(context == null) throw new IllegalArgumentException("context");
+		if(source == null) throw new IllegalArgumentException("source");
+		if(backup == null) throw new IllegalArgumentException("backup");
+
 		if(instance == null) {
-			instance = new BookmarkManager();
+			instance = new BookmarkManager(context, source, backup);
 		}
 		return instance;
 	}
-	private BookmarkManager() {
-		unReadList = new LinkedList<Bookmark>();
-		progressList = new LinkedList<Bookmark>();
-		completeList = new LinkedList<Bookmark>();
-		
-		bf = new BookmarkFile();
-		//bf.readFile(unReadList, progressList, completeList);
+	public BookmarkManager(IContextContainer context,
+			IBookmarkSource source, IBackupAccess backup) {
+		this.source = source;
+		this.backup = backup;
+
+		source.retrieve(context);
+		unReadList = source.getUnReadList();
+		progressList = source.getProgressList();
+		completeList = source.getCompleteList();
 	}
-	/**
-	 * 初期化処理をします。
-	 * @param context	コンテキスト
-	 */
-	public void init(Context context) {
-		bf.init(context);
-		bf.readFile(unReadList, progressList, completeList);
+	static public void deleteInstance() {
+		instance = null;
 	}
 	
 	/**
 	 * しおりデータをファイルに反映します。
 	 */
-	public void flush() {
-		bf.flush(unReadList, progressList, completeList );
+	public void flush(IContextContainer context) {
+		source.flush(context, unReadList, progressList, completeList );
 	}
 	/**
 	 * 未読リストを返します。
 	 * @return	未読リスト
 	 */
-	public LinkedList<Bookmark> getUnreadList() {
+	public List<Bookmark> getUnreadList() {
 		return unReadList;
 	}
 	/**
 	 * 読みかけリストを返します。
 	 * @return	読みかけリスト
 	 */
-	public LinkedList<Bookmark> getProgressList() {
+	public List<Bookmark> getProgressList() {
 		return progressList;
 	}
 	/**
 	 * 完結リストを返します。
 	 * @return	完結リスト
 	 */
-	public LinkedList<Bookmark> getCmpleteList() {
+	public List<Bookmark> getCmpleteList() {
 		return completeList;
 	}
 	
-	private int getIndexOfList(LinkedList<Bookmark> list, Bookmark in_bm) {
+	private int getIndexOfList(List<Bookmark> list, Bookmark in_bm) {
 		int i = 0;
 		for(Bookmark bm: list) {
 			String uid = bm.getUid();
@@ -124,7 +124,7 @@ public final class BookmarkManager {
 	 */
 	public void insertBookmark(Bookmark bm) {
 		ReadStatus eStatus = bm.getReadStatus();
-		LinkedList<Bookmark> insertList;
+		List<Bookmark> insertList;
 		switch(eStatus) {
 		case UNREAD:
 			insertList = unReadList;
@@ -140,7 +140,7 @@ public final class BookmarkManager {
 			//ASSERT
 			return;
 		}
-		insertList.addFirst(bm);
+		insertList.add(0, bm);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public final class BookmarkManager {
 	 * @param status	状態
 	 */
 	public void removeAllOfStatus(ReadStatus status) {
-		LinkedList<Bookmark> removeList;
+		List<Bookmark> removeList;
 		switch(status) {
 		case UNREAD:
 			removeList = unReadList;
@@ -176,20 +176,11 @@ public final class BookmarkManager {
 		removeList.clear();
 	}
 	
-	/**
-	 * しおりデータをSDカードにエクスポートします。
-	 * @return	処理結果
-	 */
-	public boolean exportBookmarks() {
-		return bf.copyBookmarkFileToSDcard();
+	public void exportBookmarks(IContextContainer container) {
+		backup.exportBackup(container, unReadList, progressList, completeList);
 	}
 	
-	/**
-	 * しおりデータをSDカードからインポートします。
-	 * @return	処理結果
-	 * @throws Exception
-	 */
-	public boolean importBookmarks() throws Exception {
-		return bf.restoreFileFromSDcard(unReadList, progressList, completeList);
+	public void importBookmarks(IContextContainer container) {
+		backup.importBackup(container);
 	}
 }

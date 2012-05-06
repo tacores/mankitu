@@ -1,5 +1,12 @@
 package jp.tacores.mankitu;
 
+import jp.tacores.mankitu.bookmark.BackupAccess;
+import jp.tacores.mankitu.bookmark.Bookmark;
+import jp.tacores.mankitu.bookmark.BookmarkFile;
+import jp.tacores.mankitu.bookmark.BookmarkManager;
+import jp.tacores.mankitu.bookmark.ReadStatus;
+import jp.tacores.mankitu.util.ContextContainer;
+import jp.tacores.mankitu.util.TimeProvider;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +32,7 @@ public class ComposeActivity extends MyActivity {
 	private String oldPage;			//ページ
 	private String oldStory;			//あらすじ
 	private String oldMemo;			//メモ
+	private BookmarkManager manager;
 	
     /** Called when the activity is first created. */
     @Override
@@ -34,6 +42,9 @@ public class ComposeActivity extends MyActivity {
         setContentView(R.layout.compose);
         Intent intent = getIntent();
         bm = (Bookmark)intent.getSerializableExtra("Bookmark");
+        
+        manager = BookmarkManager.getInstance(new ContextContainer(this),
+        		new BookmarkFile(), new BackupAccess());
        
         initStatusSpinner();
         if (bm != null) {
@@ -174,20 +185,20 @@ public class ComposeActivity extends MyActivity {
     	}
    
     	if(bm != null) {	//編集
-    		bm.update(title, status, volume, page, story, memo);
+    		bm.update(title, status, volume, page, story, memo, new TimeProvider());
     		manager.updateBookmark(bm);
     	} else {	//新規
-    		Bookmark bm_new = new Bookmark( title, status, volume, page, story, memo );
+    		Bookmark bm_new = new Bookmark( title, status, volume, page, story, memo, new TimeProvider() );
     		manager.insertBookmark(bm_new);
     	}
-    	manager.flush();	//ファイル保存
+    	manager.flush(new ContextContainer(this));	//ファイル保存
     	
     	sendResultAndFinish();
     }
     
     private void deleteBookmark() {
 		manager.removeBookmark(bm);
-		manager.flush();
+		manager.flush(new ContextContainer(this));
     }
     
     private void sendResultAndFinish() {

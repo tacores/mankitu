@@ -1,4 +1,4 @@
-package jp.tacores.mankitu;
+package jp.tacores.mankitu.bookmark;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,7 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.LinkedList;
+import java.util.List;
+
+import jp.tacores.mankitu.util.IContextContainer;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlSerializer;
@@ -43,7 +45,7 @@ class BookmarkData {
  * @author Tacores
  *
  */
-public class BookmarkFile {
+public class BookmarkFile implements IBookmarkSource {
 	
 	private static final String dataFilePath = "bookmarks.xml";
 	private static final String sdCardPath = "/siori_export.xml";
@@ -52,21 +54,14 @@ public class BookmarkFile {
 	private Context context;
 
 	/**
-	 * 初期化処理をします。
-	 * @param in_context	コンテキスト
-	 */
-	public void init(Context in_context) {
-		context = in_context;
-	}
-	/**
 	 * ファイルを読み込んで、データを各リストにセットします。
 	 * @param out_unReadList	未読リスト
 	 * @param out_progressList	読みかけリスト
 	 * @param out_completeList	完結リスト
 	 */
-	public void readFile( LinkedList<Bookmark> out_unReadList,
-			LinkedList<Bookmark> out_progressList,
-			LinkedList<Bookmark> out_completeList ) {
+	public void readFile( List<Bookmark> out_unReadList,
+			List<Bookmark> out_progressList,
+			List<Bookmark> out_completeList ) {
 		FileInputStream is;
         try{
             is = context.openFileInput(dataFilePath);
@@ -122,9 +117,9 @@ public class BookmarkFile {
     	}
 	}
 	private void processEndTag(XmlPullParser xmlPullParser,
-			LinkedList<Bookmark> out_unReadList,
-			LinkedList<Bookmark> out_progressList,
-			LinkedList<Bookmark> out_completeList ) {
+			List<Bookmark> out_unReadList,
+			List<Bookmark> out_progressList,
+			List<Bookmark> out_completeList ) {
     	String endTag = xmlPullParser.getName();
     	Log.d("CCBM", "processEnd:" + endTag);
     	if(endTag.equalsIgnoreCase("bookmark")) {
@@ -170,7 +165,7 @@ public class BookmarkFile {
     		//ASSERT
     	}
 	}
-	private void outputListXml( LinkedList<Bookmark> list, XmlSerializer serializer ) {
+	private void outputListXml( List<Bookmark> list, XmlSerializer serializer ) {
 		for(Bookmark bm: list) {
 			try {
 			serializer.startTag("", "bookmark");
@@ -248,9 +243,9 @@ public class BookmarkFile {
 	 * @param progressList	読みかけリスト
 	 * @param completeList	完結リスト
 	 */
-	public void flush( LinkedList<Bookmark> unReadList,
-			LinkedList<Bookmark> progressList,
-			LinkedList<Bookmark> completeList ) {
+	public void flush( List<Bookmark> unReadList,
+			List<Bookmark> progressList,
+			List<Bookmark> completeList ) {
         XmlSerializer serializer = Xml.newSerializer();
         try {
             //FileOutputStream os = new FileOutputStream( fPath );
@@ -356,9 +351,9 @@ public class BookmarkFile {
 	 * @return	処理結果
 	 * @throws Exception
 	 */
-	public boolean restoreFileFromSDcard( LinkedList<Bookmark> out_unReadList,
-			LinkedList<Bookmark> out_progressList,
-			LinkedList<Bookmark> out_completeList ) throws Exception {
+	public boolean restoreFileFromSDcard( List<Bookmark> out_unReadList,
+			List<Bookmark> out_progressList,
+			List<Bookmark> out_completeList ) throws Exception {
 		Log.d("CCBM", "restoreFileFromSDcard");
         String filePath = Environment.getExternalStorageDirectory() + sdCardPath;
         File file = new File(filePath);
@@ -414,5 +409,32 @@ public class BookmarkFile {
         }
         flush(out_unReadList, out_progressList, out_completeList);
 		return true;
+	}
+
+
+	public void retrieve(IContextContainer context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<Bookmark> getUnReadList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Bookmark> getProgressList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Bookmark> getCompleteList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void flush(IContextContainer container, List<Bookmark> unReadList,
+			List<Bookmark> progressList, List<Bookmark> completeList) {
+		// TODO Auto-generated method stub
+		
 	}
 }
