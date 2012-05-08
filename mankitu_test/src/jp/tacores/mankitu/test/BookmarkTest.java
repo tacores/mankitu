@@ -2,8 +2,8 @@ package jp.tacores.mankitu.test;
 
 import jp.tacores.mankitu.bookmark.Bookmark;
 import jp.tacores.mankitu.bookmark.ReadStatus;
+import jp.tacores.mankitu.test.util.TimeProviderStub;
 import jp.tacores.mankitu.util.ITimeProvider;
-import jp.tacores.mankitu.util.TimeProvider;
 import junit.framework.TestCase;
 
 public class BookmarkTest extends TestCase {
@@ -150,14 +150,14 @@ public class BookmarkTest extends TestCase {
 		Bookmark sut = createAnonBookmark();
 		String newTitle = "新タイトル";
 		sut.update(newTitle, ANON_STATUS, ANON_VOLUME,
-				ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProvider());
+				ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		assertEquals("Updated title is not correct.", newTitle, sut.getTitle());
 	}
 	public void testUpdate_TitleNull_ThrowsIllegalArgumentException() {
 		Bookmark sut = createAnonBookmark();
 		try {
 			sut.update(null, ANON_STATUS, ANON_VOLUME,
-					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProvider());
+					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		} catch(IllegalArgumentException e) {
 			return;
 		}
@@ -167,14 +167,14 @@ public class BookmarkTest extends TestCase {
 		Bookmark sut = createAnonBookmark();
 		String newStatus = "完結";
 		sut.update(ANON_TITLE, newStatus, ANON_VOLUME,
-				ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProvider());
+				ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		assertEquals("Updated status is not correct.", newStatus, sut.getReadStatusString());
 	}
 	public void testUpdate_StatusNull_ThrowsIllegalArgumentException() {
 		Bookmark sut = createAnonBookmark();
 		try {
 			sut.update(ANON_TITLE, null, ANON_VOLUME,
-					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProvider());
+					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		} catch(IllegalArgumentException e) {
 			return;
 		}
@@ -184,7 +184,7 @@ public class BookmarkTest extends TestCase {
 		Bookmark sut = createAnonBookmark();
 		try {
 			sut.update(ANON_TITLE, "不正", ANON_VOLUME,
-					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProvider());
+					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		} catch(IllegalArgumentException e) {
 			return;
 		}
@@ -194,14 +194,14 @@ public class BookmarkTest extends TestCase {
 		Bookmark sut = createAnonBookmark();
 		String newVolume = "22";
 		sut.update(ANON_TITLE, ANON_STATUS, newVolume,
-				ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProvider());
+				ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		assertEquals("Updated volume is not correct.", newVolume, sut.getVolume());
 	}
 	public void testUpdate_VolumeNull_ThrowsIllegalArgumentException() {
 		Bookmark sut = createAnonBookmark();
 		try {
 			sut.update(ANON_TITLE, ANON_STATUS, null,
-					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProvider());
+					ANON_PAGE, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		} catch(IllegalArgumentException e) {
 			return;
 		}
@@ -211,14 +211,14 @@ public class BookmarkTest extends TestCase {
 		Bookmark sut = createAnonBookmark();
 		String newPage = "22";
 		sut.update(ANON_TITLE, ANON_STATUS, ANON_VOLUME,
-				newPage, ANON_STORY, ANON_MEMO, new TimeProvider());
+				newPage, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		assertEquals("Updated page is not correct.", newPage, sut.getPage());
 	}
 	public void testUpdate_PageNull_ThrowsIllegalArgumentException() {
 		Bookmark sut = createAnonBookmark();
 		try {
 			sut.update(ANON_TITLE, ANON_STATUS, ANON_VOLUME,
-					null, ANON_STORY, ANON_MEMO, new TimeProvider());
+					null, ANON_STORY, ANON_MEMO, new TimeProviderStub());
 		} catch(IllegalArgumentException e) {
 			return;
 		}
@@ -228,14 +228,14 @@ public class BookmarkTest extends TestCase {
 		Bookmark sut = createAnonBookmark();
 		String newStory = "更新後のあらすじ";
 		sut.update(ANON_TITLE, ANON_STATUS, ANON_VOLUME,
-				ANON_PAGE, newStory, ANON_MEMO, new TimeProvider());
+				ANON_PAGE, newStory, ANON_MEMO, new TimeProviderStub());
 		assertEquals("Updated page is not correct.", newStory, sut.getStory());
 	}
 	public void testUpdate_StoryNull_ThrowsIllegalArgumentException() {
 		Bookmark sut = createAnonBookmark();
 		try {
 			sut.update(ANON_TITLE, ANON_STATUS, ANON_VOLUME,
-					ANON_PAGE, null, ANON_MEMO, new TimeProvider());
+					ANON_PAGE, null, ANON_MEMO, new TimeProviderStub());
 		} catch(IllegalArgumentException e) {
 			return;
 		}
@@ -245,14 +245,14 @@ public class BookmarkTest extends TestCase {
 		Bookmark sut = createAnonBookmark();
 		String newMemo = "更新後のメモ";
 		sut.update(ANON_TITLE, ANON_STATUS, ANON_VOLUME,
-				ANON_PAGE, ANON_STORY, newMemo, new TimeProvider());
+				ANON_PAGE, ANON_STORY, newMemo, new TimeProviderStub());
 		assertEquals("Updated page is not correct.", newMemo, sut.getMemo());
 	}
 	public void testUpdate_MemoNull_ThrowsIllegalArgumentException() {
 		Bookmark sut = createAnonBookmark();
 		try {
 			sut.update(ANON_TITLE, ANON_STATUS, ANON_VOLUME,
-					ANON_PAGE, ANON_STORY, null, new TimeProvider());
+					ANON_PAGE, ANON_STORY, null, new TimeProviderStub());
 		} catch(IllegalArgumentException e) {
 			return;
 		}

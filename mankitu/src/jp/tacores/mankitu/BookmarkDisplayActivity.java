@@ -327,7 +327,7 @@ public class BookmarkDisplayActivity extends MyActivity {
     		returnList = manager.getProgressList();
     		break;
     	case COMPLETE:
-    		returnList = manager.getCmpleteList();
+    		returnList = manager.getCompleteList();
     		break;
     	default:
     		//TODO

@@ -72,7 +72,7 @@ public final class BookmarkManager {
 	 * 完結リストを返します。
 	 * @return	完結リスト
 	 */
-	public List<Bookmark> getCmpleteList() {
+	public List<Bookmark> getCompleteList() {
 		return completeList;
 	}
 	
