@@ -2,9 +2,10 @@ package jp.tacores.mankitu;
 
 import jp.tacores.mankitu.bookmark.BackupAccess;
 import jp.tacores.mankitu.bookmark.Bookmark;
-import jp.tacores.mankitu.bookmark.BookmarkFile;
+import jp.tacores.mankitu.bookmark.BookmarkXml;
 import jp.tacores.mankitu.bookmark.BookmarkManager;
 import jp.tacores.mankitu.bookmark.ReadStatus;
+import jp.tacores.mankitu.bookmark.XmlStream;
 import jp.tacores.mankitu.util.ContextContainer;
 import jp.tacores.mankitu.util.TimeProvider;
 import android.app.AlertDialog;
@@ -44,7 +45,7 @@ public class ComposeActivity extends MyActivity {
         bm = (Bookmark)intent.getSerializableExtra("Bookmark");
         
         manager = BookmarkManager.getInstance(new ContextContainer(this),
-        		new BookmarkFile(), new BackupAccess());
+        		new BookmarkXml(new XmlStream()), new BackupAccess());
        
         initStatusSpinner();
         if (bm != null) {

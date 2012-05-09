@@ -7,9 +7,10 @@ import java.util.List;
 
 import jp.tacores.mankitu.bookmark.BackupAccess;
 import jp.tacores.mankitu.bookmark.Bookmark;
-import jp.tacores.mankitu.bookmark.BookmarkFile;
+import jp.tacores.mankitu.bookmark.BookmarkXml;
 import jp.tacores.mankitu.bookmark.BookmarkManager;
 import jp.tacores.mankitu.bookmark.ReadStatus;
+import jp.tacores.mankitu.bookmark.XmlStream;
 import jp.tacores.mankitu.util.ContextContainer;
 
 import android.app.AlertDialog;
@@ -66,7 +67,7 @@ public class BookmarkDisplayActivity extends MyActivity {
         setContentView(R.layout.comiclist);
         
         manager = BookmarkManager.getInstance(new ContextContainer(this),
-        		new BookmarkFile(), new BackupAccess());
+        		new BookmarkXml(new XmlStream()), new BackupAccess());
         //manager.init(this);
         initializeTab();	//É^ÉuÇÃèâä˙âª
         

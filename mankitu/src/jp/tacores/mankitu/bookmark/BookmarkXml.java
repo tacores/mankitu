@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.util.LinkedList;
 import java.util.List;
 
 import jp.tacores.mankitu.util.IContextContainer;
@@ -45,14 +47,23 @@ class BookmarkData {
  * @author Tacores
  *
  */
-public class BookmarkFile implements IBookmarkSource {
+public class BookmarkXml implements IBookmarkSource {
 	
 	private static final String dataFilePath = "bookmarks.xml";
 	private static final String sdCardPath = "/siori_export.xml";
 	private BookmarkData bmData = new BookmarkData();
 	private String tagName;
 	private Context context;
+	private IXmlStream stream;
+	private List<Bookmark> unReadList;
+	private List<Bookmark> progressList;
+	private List<Bookmark> completeList;
 
+	public BookmarkXml(IXmlStream stream) {
+		if(stream == null) throw new IllegalArgumentException("stream");
+		this.stream = stream;
+	}
+	
 	/**
 	 * ファイルを読み込んで、データを各リストにセットします。
 	 * @param out_unReadList	未読リスト
@@ -413,23 +424,59 @@ public class BookmarkFile implements IBookmarkSource {
 
 
 	public void retrieve(IContextContainer context) {
-		// TODO Auto-generated method stub
-		
+		unReadList = new LinkedList<Bookmark>();
+		progressList = new LinkedList<Bookmark>();
+		completeList = new LinkedList<Bookmark>();
+        try {
+        	InputStream is = stream.getInputStream();
+            XmlPullParser xmlPullParser = Xml.newPullParser();
+            xmlPullParser.setInput( is, "UTF-8" );
+ 
+            int eventType;
+            eventType = xmlPullParser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch(eventType)
+                {
+                case XmlPullParser.START_DOCUMENT:
+                	//nop
+                	break;
+                case XmlPullParser.END_DOCUMENT:
+                	break;
+                case XmlPullParser.START_TAG:
+                	processStartTag(xmlPullParser);
+                	break;
+                case XmlPullParser.END_TAG:
+                	processEndTag(xmlPullParser,
+                			unReadList, progressList, completeList );
+                	break;
+                case XmlPullParser.TEXT:
+                	processText(xmlPullParser);
+                	break;
+                default:
+                	break;
+             
+                }
+                eventType = xmlPullParser.next();
+            }
+            is.close();
+        }catch( Exception ex ){
+            Log.d( "CCBM", ex.toString() );
+        }
 	}
 
 	public List<Bookmark> getUnReadList() {
-		// TODO Auto-generated method stub
-		return null;
+		if(unReadList == null) throw new IllegalStateException("unReadList is null.");
+		return unReadList;
 	}
 
 	public List<Bookmark> getProgressList() {
-		// TODO Auto-generated method stub
-		return null;
+		if(progressList == null) throw new IllegalStateException("progressList is null.");
+		return progressList;
 	}
 
 	public List<Bookmark> getCompleteList() {
-		// TODO Auto-generated method stub
-		return null;
+		if(completeList == null) throw new IllegalStateException("completeList is null.");
+		return completeList;
 	}
 
 	public void flush(IContextContainer container, List<Bookmark> unReadList,
