@@ -110,6 +110,25 @@ public class BookmarkXmlTest extends TestCase {
 		assertEquals("Progress list was not 2.", 2, sut.getProgressList().size());
 		assertEquals("Complete list was not 1.", 1, sut.getCompleteList().size());
 	}
+	public void testRetrieve_2ndIsInvalid_1stValidIsSet() {
+		String xml = HEADER + createUnReadBookmarkString() +
+				"<bookmark><INVAL>invalid</INVAL></bookmark>" + FOOTER;
+		BookmarkXml sut = new BookmarkXml(new XmlStreamStub(xml));
+		
+		sut.retrieve(new NullContextContainer());
+		
+		assertEquals("1st element is not set.", 1, sut.getUnReadList().size());
+	}
+	public void testRetrieve_2ndIsInvalid_3rdValidDiscarded() {
+		String xml = HEADER + createUnReadBookmarkString() +
+				"<bookmark><INVAL>invalid</INVAL></bookmark>" +
+				createCompleteBookmarkString() + FOOTER;
+		BookmarkXml sut = new BookmarkXml(new XmlStreamStub(xml));
+		
+		sut.retrieve(new NullContextContainer());
+		
+		assertEquals("3rd element is not discarded.", 0, sut.getCompleteList().size());
+	}
 	
 	private BookmarkXml createAnonBookmarkXml() {
 		return new BookmarkXml(new XmlStreamStub(ANON_XML));
